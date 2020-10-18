@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="container">
+        <div id="logs">
+        </div>
+    </div>
+    <script>
+        refreshContent();
+        var interval = setInterval(refreshContent, 5000);
+
+        function refreshContent() {
+            $("#logs").load("/cors/raw/log");
+        }
+    </script>
+{% endblock %}
