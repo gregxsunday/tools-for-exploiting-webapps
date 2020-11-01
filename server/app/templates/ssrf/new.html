@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    {% if alert is defined%}
+    <div class="alert alert-primary" role="alert">
+        {{alert}}
+      </div>
+    {% endif %}
+
+    <div class="row">
+        <h1>Add a new target</h1><br>
+    </div>
+
+    <div class="row">
+        <form action='/ssrf/add' method="POST">
+            <label for="name">Target name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="domain">Domain (optional):</label><br>
+            <input type="text" id="domain" name="domain"><br>
+            <input type="submit" value="Add">
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
