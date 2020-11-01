@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    {% if alert is defined%}
+    <div class="alert alert-primary" role="alert">
+        {{alert}}
+      </div>
+    {% endif %}
+
+    <div class="row">
+        <h1>Start HTTP listener</h1><br>
+    </div>
+
+    <div class="row">
+        <form action='/ssrf/start_listener' method="POST">
+            <label for="name">Port:</label><br>
+            <input type="text" id="port" name="port"><br>
+            <input type="submit" value="Add">
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
