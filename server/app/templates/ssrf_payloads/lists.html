@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+
+    <h2>Payloads lists</h2>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Target domain</th>
+            <th scope="col">Attack result Domain</th>
+            <th scope="col">List</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+            
+          {% for payload in payloads %}
+            <tr>
+              <td>{{payload.payload_name}}</td>
+              <td>{{payload.target_domain}}</td>
+              <td>{{payload.forgery_domain}}</td>
+              <td><a href='/payloads/lists/{{payload.payload_name}}'>Link</a></td>
+              <td>
+                <form action="/payloads/lists/{{payload.payload_name}}" method="post">
+                  <input type="submit" value="Submit">
+                </form>
+              </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock %}
