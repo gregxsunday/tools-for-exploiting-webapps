@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h1>Configure a new full scan</h1>
+        </div>
+        
+        <label for="name">Scan name:</label>
+        <input id="name" type="text" name="msg" placeholder="Scan name">
+        <br/>
+        <label for="target_domain">Target domain:</label>
+        <input id="target_domain" type="text" name="msg" placeholder="Target domain">
+        <br/>
+        <label for="forgery_domain">Attack result domain:</label>
+        <input id="forgery_domain" type="text" name="msg" placeholder="Attack result domain">
+        <br/>
+        <label for="log_level">Log level:</label>
+        <select id="log_level" name="log_level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <br>
+        <label for="char_mode">Special character mode:</label>
+        <select id="char_mode" name="char_mode">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+        <br>
+        <input id="buttonInput" type="submit" value="Send">
+        
+        <div id="response">
+        </div>
+    </div>
+    <script>
+        function sendDomain() {
+            var scan_name = $("#scan_name").val();
+            var target_domain = $("#target_domain").val();
+            var forgery_domain = $("#forgery_domain").val();
+            var log_level = $("#log_level").val();
+            var char_mode = $("#char_mode").val();
+            var xhttp_cors = new XMLHttpRequest();
+            var xhttp_recon = new XMLHttpRequest();
+            var xhttp_payloads = new XMLHttpRequest();
+
+            xhttp_cors.onreadystatechange = function () {
+                $("#result").text("");
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = '<p><span>Scan is running!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 400) {
+                    var response = '<p><span>Something went wrong!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 403) {
+                    var response = '<p><span>Wrong domain name!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 500) {
+                    var response = '<p><span>Something went wrong with the server!</span></p>';
+                    $("#response").append(response);
+                }
+            }
+
+            xhttp_payloads.onreadystatechange = function () {
+                $("#result").text("");
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = '<p><span>List creation started!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 400) {
+                    var response = '<p><span>Something went wrong!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 403) {
+                    var response = '<p><span>Wrong domain name!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 500) {
+                    var response = '<p><span>Something went wrong with the server!</span></p>';
+                    $("#response").append(response);
+                }
+            }
+
+            xhttp_recon.onreadystatechange = function () {
+                $("#result").text("");
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = '<p><span>Recon started!</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 403) {
+                    var response = '<p><span>' + this.response + '</span></p>';
+                    $("#response").append(response);
+                } else if (this.readyState == 4 && this.status == 500) {
+                    var response = '<p><span>Something went wrong with the server!</span></p>';
+                    $("#response").append(response);
+                }
+            }
+
+            const data_cors = new FormData();
+            data_cors.append("domain", target_domain);
+            data_cors.append("log_level", log_level);
+            data_cors.append("char_mode", char_mode);
+
+            const data_recon = new FormData();
+            data_recon.append("name", scan_name);
+            data_recon.append("domain", target_domain);
+
+            const data_payloads = new FormData();
+            data_payloads.append("target_domain", target_domain);
+            data_payloads.append("forgery_domain", forgery_domain);
+            
+            
+            xhttp_cors.open("POST", "/cors/run", true);
+            xhttp_cors.send(data_cors);
+
+            xhttp_payloads.open("POST", "/payloads/create_payloads", true);
+            xhttp_payloads.send(data_payloads);
+
+            xhttp_recon.open("POST", "/autorecon/scan", true);
+            xhttp_recon.send(data_recon);
+        };
+
+        $("#textInput").keypress(function (e) {
+                if (e.which == 13) {
+                    sendDomain();
+                }
+        });
+
+        $("#buttonInput").click(function () {
+                sendDomain();
+        });
+    </script>
+
+{% endblock %}
